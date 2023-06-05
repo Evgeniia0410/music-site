@@ -1,0 +1,40 @@
+CREATE table if not exists EXECUTOR(
+  EXECUTOR_ID INTEGER PRIMARY key,
+  NAME_EXECUTOR VARCHAR (80) not null,
+  GERE VARCHAR (80) not null
+);
+
+ create table iF not exists ALBUM(
+   ALBUM_ID INTEGER primary key,
+   NAME_ALBUM VARCHAR (80) NOT null,
+   YEAR_OF_RELEASE datE,
+   EXECUTOR VARCHAR (80) not null
+);
+ create table if not exists TRACK (
+  TRACK_ID INTEGER primary key,
+  DURATION numeric not null,
+  ALBUM VARCHAR (80) not null
+);
+create table if not exists GANR (
+  ID SERIAL primary key,
+  ganr VARCHAR (80) not null
+);
+create table if not exists GANR_EXECUTOR (
+  GANR_id INTEGER not null REFERENCES GANR(ID),
+  EXECUTOR_id INTEGER not null REFERENCES EXECUTOR(ID),
+  constraint pk primary key (GANR_ID, EXECUTOR_ID)
+);
+create table if not exists EXECUTOR_album (
+  ALBUM_ID INTEGER primary key not null REFERENCES AIBUM(ID),
+  EXECUTOR_id INTEGER not null REFERENCES EXECUTOR(ID),
+  constraint pk primary key (ALBUM_ID, EXECUTOR_ID)
+);
+create table if not exists COLLECTION (
+  COLLECTION_ID integer primary key,
+  year_of_release date not null
+ );
+create table if not exists TRACK_COLLECTION (
+  TRACK_ID integer not null REFERENCES TRACK(id),
+  COLLECTION_ID integer not null REFERENCES COLLECTION(ID),
+  constraint pk primary key (TRACK_ID, COLLECTION_ID)
+);
