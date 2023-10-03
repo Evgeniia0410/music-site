@@ -1,0 +1,120 @@
+#Продолжаем работать со своей базой данных. В этом задании заполните базу данных из домашнего задания к занятию "Работа с SQL. Создание БД". В ней должно быть:
+#не менее 4 исполнителей
+
+INSERT INTO EXECUTOR (name, genre)
+VALUES
+('The Beatles', 'Rock'),
+('Michael Jackson', 'Pop'),
+('Queen', 'Rock'),
+('Beyonce', 'R&B');
+
+#не менее 3 жанров
+
+INSERT INTO genr (name)
+VALUES
+('Rock'),
+('Hip-hop'),
+('Electronic');
+
+
+#не менее 3 альбомов
+
+INSERT INTO album (name, year_of_release, executor)
+VALUES
+('Thriller', 1982, 'Michael Jackson'),
+('Back in Black', 1980, 'AC/DC'),
+('The Dark Side of the Moon', 1973, 'Pink Floyd');
+
+#не менее 6 треков
+
+INSERT INTO track (title, duration,album)
+VALUES
+('Bohemian Rhapsody', '06:07', 'A Night at the Opera'),
+('Stairway to Heaven', '08:02', 'Led Zeppelin IV'),
+('Hotel California', '06:31', 'Hotel California'),
+('Imagine', '03:07', 'Imagine'),
+('Billie Jean', '04:54', 'Thriller'),
+('Smells Like Teen Spirit', '05:01', 'Nevermind');
+
+#не менее 4 сборников
+
+INSERT INTO track-mix (name)
+VALUES
+('The Beatles 1967-1970'),
+('The Essential Michael Jackson'),
+('The Very Best of Fleetwood Mac'),
+('The Best of Bob Marley and the Wailers');
+
+______________________________________________________________
+
+#Написать SELECT-запросы, которые выведут информацию:
+#Название и продолжительность самого длительного трека.
+
+SELECT name, duration 
+FROM track 
+ORDER BY duration DESC 
+LIMIT 1;
+
+#Название треков, продолжительность которых не менее 3,5 минут.
+
+SELECT name 
+FROM track 
+WHERE duration >= 3.5;
+
+#Названия сборников, вышедших в период с 2018 по 2020 год включительно.
+
+SELECT name 
+FROM album 
+WHERE year_of_release BETWEEN 2018 AND 2020;
+
+#Исполнители, чьё имя состоит из одного слова.
+
+SELECT name 
+FROM artist 
+WHERE name NOT LIKE '% %';
+
+#Название треков, которые содержат слово «мой» или «my».
+
+SELECT name 
+FROM track
+WHERE name LIKE '%мой%' OR name LIKE '%my%';
+
+__________________________________________________________________
+#Написать SELECT-запросы, которые выведут информацию согласно инструкциям ниже.
+#Количество исполнителей в каждом жанре.
+
+SELECT genre.name, COUNT(DISTINCT executor.id) AS executor_count
+FROM genre
+JOIN executor ON executor.genre_id = genre.id
+GROUP BY genre.name;
+
+#Количество треков, вошедших в альбомы 2019–2020 годов.
+
+SELECT COUNT(track.id) AS track_count
+FROM track
+JOIN album ON track.album_id = album.id
+WHERE album.year_of_release BETWEEN 2019 AND 2020;
+
+#Средняя продолжительность треков по каждому альбому.
+
+SELECT album.name, AVG(track.duration) AS avg_duration
+FROM album
+JOIN track ON track.album_id = album.id
+GROUP BY album.name;
+
+#Все исполнители, которые не выпустили альбомы в 2020 году.
+
+SELECT artist.name
+FROM artist
+LEFT JOIN album ON album.artist_id = artist.id AND album.year-of_release = 2020
+WHERE album.id IS NULL;
+
+#Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
+
+SELECT collection.name
+FROM collection
+JOIN collection_track ON collection_track.collection_id = collection.id
+JOIN track ON track.id = collection_track.track_id
+JOIN album ON album.id = track.album_id
+JOIN artist ON artist.id = album.artist_id
+WHERE artist.name = 'Michael Jackson';
